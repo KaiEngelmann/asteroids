@@ -1,13 +1,22 @@
 import pygame 
 from constants import *
-from circleshape import *
+from player import Player
 
 def main():
     pygame.init()
+    
+
+
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     # creates object for FPS
     fps = pygame.time.Clock()
     dt = 0
+
+    # Creates the game object player
+
+    x = SCREEN_WIDTH / 2
+    y = SCREEN_HEIGHT / 2
+    player = Player(x, y)
 
     # creates game loop
     while True:
@@ -15,6 +24,7 @@ def main():
             if event.type == pygame.QUIT:
                 return
         screen.fill((0,0,0))
+        player.draw(screen)
         pygame.display.flip()
         # dt limits loop to 60 FPS
 
