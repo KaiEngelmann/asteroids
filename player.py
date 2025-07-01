@@ -20,10 +20,11 @@ class Player(CircleShape):
 
         pygame.draw.polygon(screen, color, points, width=2)
 
+    # rotates the player
     def rotate(self, dt):
         return self.rotation + (PLAYER_TURN_SPEED * dt)
     
-
+    # moves the player
     def move(self, dt):
         direction = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += direction * PLAYER_SPEED * dt
