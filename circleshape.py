@@ -12,3 +12,7 @@ class CircleShape(pygame.sprite.Sprite):
         self.position = pygame.Vector2(x, y)
         self.velocity = pygame.Vector2(0, 0)
         self.radius = radius
+
+    def collisions(self, asteroid):
+        distance = self.position.distance_to(asteroid.position)
+        return distance <= (self.radius + asteroid.radius)
