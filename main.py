@@ -50,7 +50,7 @@ def main():
         for asteroid in asteroid_group:
             for shot in shot_group:
                 if asteroid.collisions(shot) == True:
-                    asteroid.kill()
+                    asteroid.split()
                     shot.kill()
         for sprite in drawable:
             sprite.draw(screen)
