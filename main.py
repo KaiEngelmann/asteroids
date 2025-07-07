@@ -33,6 +33,7 @@ def main():
     y = SCREEN_HEIGHT / 2
     player = Player(x, y)
 
+
     asteroid_field = AsteroidField()
 
     # creates game loop
