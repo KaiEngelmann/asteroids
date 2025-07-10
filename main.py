@@ -95,7 +95,6 @@ def main():
             screen.blit(score_text, (SCREEN_WIDTH//2 - score_text.get_width()//2, 150))
             restart_button.draw(screen)
         elif game_state == PLAYING:
-            time_since_last_hit += dt
             player_hit = False
         
 
