@@ -2,7 +2,7 @@ import pygame
 from constants import *
 from player import Player
 from asteroids import Asteroid
-from asteroidfield import AsteroidField
+from asteroidfield import *
 from shot import Shot
 from buttons import Button
 import sys
@@ -39,12 +39,25 @@ def main():
 
     asteroid_field = AsteroidField()
 
+    START, PLAYING, GAME_OVER = "start", "playing", "game_over"
+    game_state = START
+    hud_color = (225, 225, 255)
+    score = 0
+    lives = 3
+    time_since_last_hit = 999
+    invincibility_duration = 2
+    round_number = 1
+    score_for_next_round = 30
+
+
     def start_game():
-        nonlocal game_state, lives, score, player, asteroid_field, time_since_last_hit
+        nonlocal game_state, lives, score, player, asteroid_field, time_since_last_hit, round_number
         game_state = PLAYING
         lives = 3
         score = 0
         time_since_last_hit = 999
+        round_number = 1
+        score_for_next_round = 30
 
         # Reset game objects
         for sprite in updatable:
@@ -53,15 +66,8 @@ def main():
         player = Player(x, y)
         asteroid_field = AsteroidField()
 
-    START, PLAYING, GAME_OVER = "start", "playing", "game_over"
-    game_state = START
     start_button = Button("Start Game", SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 - 25, 200, 50, font, start_game)
     restart_button = Button("Play Again", SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 50, 200, 50, font, start_game)
-    hud_color = (225, 225, 255)
-    score = 0
-    lives = 3
-    time_since_last_hit = 999
-    invincibility_duration = 2 
 
     # creates game loop
     while True:
@@ -115,19 +121,24 @@ def main():
                         asteroid.split()
                         shot.kill()
                         score += 1
+            if score >= score_for_next_round:
+                round_number += 1
+                score_for_next_round += 30
+                asteroid_field.next_round()
             for sprite in drawable:
                 sprite.draw(screen)
 
             lives_text = font.render(f"Lives: {lives}", True, hud_color)
             score_text = font.render(f"Score: {score}", True, hud_color)
-        
-            screen.blit(lives_text, (10, 10))
+            round_text = font.render(f"Round {round_number}", True, hud_color)
+            screen.blit(round_text, (SCREEN_WIDTH // 2 - round_text.get_width() // 2, 10))
+            screen.blit(lives_text, (10, 10)) 
             screen.blit(score_text, (SCREEN_WIDTH - score_text.get_width() -10, 10))
         pygame.display.flip()
-        # dt limits loop to 60 FPS
+        # dt limits loop to 60 FPSs
 
         dt = fps.tick(60) / 1000
-
+        
     print(f"Starting Asteroids!\nScreen width: {SCREEN_WIDTH}\nScreen height: {SCREEN_HEIGHT}")
 
 if __name__ == "__main__":
