@@ -27,7 +27,7 @@ class Asteroid(CircleShape):
         screen.blit(self.scaled_image, rect)
 
     def update(self, dt):
-            
+    
         self.position += self.velocity * dt
 
     def split(self):
