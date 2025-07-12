@@ -78,6 +78,12 @@ def main():
             if event.type == pygame.QUIT:
                 return
         screen.fill((0,0,0))
+        for star in stars:
+            x, y, base_brightness = star
+            flicker = random.randint(-30, 30)
+            brightness = max(150, min(255, base_brightness + flicker))
+            color = (brightness, brightness, brightness)
+            screen.set_at((x, y), color)
 
         if game_state == START:
             start_button.handle_event(event)
