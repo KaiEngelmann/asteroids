@@ -23,3 +23,6 @@ class Button:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos):
                 self.callback()
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RETURN:  # Enter key
+                self.callback()
