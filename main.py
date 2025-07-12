@@ -1,7 +1,7 @@
 import pygame 
 from constants import *
-from player import Player
-from asteroids import Asteroid
+from player import *
+from asteroids import *
 from asteroidfield import *
 from shot import Shot
 from buttons import Button
@@ -9,8 +9,6 @@ import sys
 
 def main():
     pygame.init()
-    
-
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     # creates object for FPS
@@ -18,6 +16,8 @@ def main():
     dt = 0
     pygame.font.init()
     font = pygame.font.SysFont("Arial", 24)
+
+    Player.load_spaceship()
 
     # create groups for game objects
     updatable = pygame.sprite.Group()
@@ -39,6 +39,7 @@ def main():
 
     asteroid_field = AsteroidField()
 
+    load_asteroid_images()
     START, PLAYING, GAME_OVER = "start", "playing", "game_over"
     game_state = START
     hud_color = (225, 225, 255)
@@ -51,7 +52,7 @@ def main():
 
 
     def start_game():
-        nonlocal game_state, lives, score, player, asteroid_field, time_since_last_hit, round_number
+        nonlocal game_state, lives, score, player, asteroid_field, time_since_last_hit, round_number, score_for_next_round
         game_state = PLAYING
         lives = 3
         score = 0
