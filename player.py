@@ -1,12 +1,30 @@
 from circleshape import *
 from constants import *
 from shot import *
+import os
+import pygame
+
+SPACESHIP_IMAGE = None
+
 
 class Player(CircleShape):
-    def __init__(self, x , y):
+
+    SPACESHIP_IMAGE = None
+    
+    @classmethod
+    def load_spaceship(cls):
+        original_image = pygame.image.load(r"D:\Python Projects\asteroids\player.png").convert_alpha()
+        cls.SPACESHIP_IMAGE = pygame.transform.flip(original_image, False, True)
+    def __init__(self, x , y, image=None):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
         self.shot_timer = 0
+        self.original_image = self.SPACESHIP_IMAGE
+        self.update_scaled_image()
+
+    def update_scaled_image(self):
+        diameter = self.radius * 2
+        self.image = pygame.transform.smoothscale(self.original_image, (int(diameter), int(diameter)))
 
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -17,10 +35,9 @@ class Player(CircleShape):
         return [a, b, c]
 
     def draw(self, screen):
-        color = (255, 255, 255)
-        points = self.triangle()
-
-        pygame.draw.polygon(screen, color, points, width=2)
+        rotated_image = pygame.transform.rotate(self.image, -self.rotation)
+        rect = rotated_image.get_rect(center=self.position)
+        screen.blit(rotated_image, rect)
 
     # rotates the player
     def rotate(self, dt):
