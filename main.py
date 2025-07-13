@@ -10,6 +10,7 @@ from stars import *
 
 def main():
     pygame.init()
+    pygame.mixer.init()
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     # creates object for FPS
@@ -19,6 +20,7 @@ def main():
     font = pygame.font.SysFont("Arial", 24)
 
     Player.load_spaceship()
+    Player.load_sounds()
 
     # create groups for game objects
     updatable = pygame.sprite.Group()
@@ -80,11 +82,11 @@ def main():
                 return
         screen.fill((0,0,0))
         for star in stars:
-            x, y, base_brightness = star
+            star1, star2, base_brightness = star
             flicker = random.randint(-30, 30)
             brightness = max(150, min(255, base_brightness + flicker))
             color = (brightness, brightness, brightness)
-            screen.set_at((x, y), color)
+            screen.set_at((star1, star2), color)
 
         if game_state == START:
             start_button.handle_event(event)

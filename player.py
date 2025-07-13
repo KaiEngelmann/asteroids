@@ -10,6 +10,14 @@ SPACESHIP_IMAGE = None
 
 class Player(CircleShape):
 
+    LASER_SOUND = None  # class variable
+
+    @classmethod
+    def load_sounds(cls):
+        base_path = Path(__file__).parent / "assets" / "sounds"
+        cls.LASER_SOUND = pygame.mixer.Sound(str(base_path / "laser.wav"))
+
+
     SPACESHIP_IMAGE = None
     
     @classmethod
@@ -22,12 +30,14 @@ class Player(CircleShape):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
         self.shot_timer = 0
+        self.position = pygame.Vector2(x, y)
         self.original_image = self.SPACESHIP_IMAGE
         self.update_scaled_image()
 
     def update_scaled_image(self):
         diameter = self.radius * 2
         self.image = pygame.transform.smoothscale(self.original_image, (int(diameter), int(diameter)))
+        self.rect = self.image.get_rect(center=self.position)
 
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -39,8 +49,9 @@ class Player(CircleShape):
 
     def draw(self, screen):
         rotated_image = pygame.transform.rotate(self.image, -self.rotation)
-        rect = rotated_image.get_rect(center=self.position)
-        screen.blit(rotated_image, rect)
+        rotated_rect = rotated_image.get_rect(center=self.position)
+        screen.blit(rotated_image, rotated_rect)
+        self.rect = rotated_rect  # update self.rect to match rotated image position
 
     # rotates the player
     def rotate(self, dt):
@@ -73,5 +84,7 @@ class Player(CircleShape):
             velocity = direction * PLAYER_SHOOT_SPEED
             shot = Shot(self.position.x, self.position.y, velocity)
             self.shot_timer = SHOT_CLOCK
+            if self.LASER_SOUND:
+                self.LASER_SOUND.play()
 
 

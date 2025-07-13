@@ -1,0 +1,21 @@
+import base64
+from pathlib import Path
+
+laser_base64 = """
+UklGRiQAAABXQVZFZm10IBAAAAABAAEAgD4AAIA+AAABAAgAZGF0YQAAAAAFAAAA
+AAAFAAAABQAAAAUAAAAGAAAABwAAABwAAAAgAAAACAAAABIAAAASAAAAGQAAAAYA
+AAAFAAAAAgAAAAYAAAAGAAAABwAAAAYAAAAGAAAABQAAAAUAAAAGAAAABQAAAAYA
+AAAF
+"""
+
+# Remove newlines and decode
+laser_data = base64.b64decode(laser_base64.replace("\n", ""))
+
+# Save file path - adjust if you want
+output_path = Path("assets/sounds/laser.wav")
+output_path.parent.mkdir(parents=True, exist_ok=True)
+
+with open(output_path, "wb") as f:
+    f.write(laser_data)
+
+print(f"Laser sound saved to {output_path.resolve()}")
