@@ -6,6 +6,7 @@ from asteroidfield import *
 from shot import Shot
 from buttons import Button
 import sys
+from stars import *
 
 def main():
     pygame.init()

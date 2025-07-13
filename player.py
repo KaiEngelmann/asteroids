@@ -3,6 +3,7 @@ from constants import *
 from shot import *
 import os
 import pygame
+from pathlib import Path
 
 SPACESHIP_IMAGE = None
 
@@ -13,7 +14,9 @@ class Player(CircleShape):
     
     @classmethod
     def load_spaceship(cls):
-        original_image = pygame.image.load(r"D:\Python Projects\asteroids\player.png").convert_alpha()
+        base_path = Path(__file__).parent  # Folder where this Python file lives
+        image_path = base_path / "assets" / "player.png"        
+        original_image = pygame.image.load(str(image_path)).convert_alpha()
         cls.SPACESHIP_IMAGE = pygame.transform.flip(original_image, False, True)
     def __init__(self, x , y, image=None):
         super().__init__(x, y, PLAYER_RADIUS)

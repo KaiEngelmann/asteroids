@@ -3,12 +3,16 @@ from constants import *
 import random
 import os
 import pygame
+from pathlib import Path
 
 ASTEROID_IMAGES = []
 def load_asteroid_images():
     global ASTEROID_IMAGES
-    paths = [f"D:/Python Projects/asteroids/asteroid_{i}.png" for i in range(2, 5)]
-    ASTEROID_IMAGES = [pygame.image.load(p).convert_alpha() for p in paths]
+    ASTEROID_IMAGES = []
+    base_path = Path(__file__).parent
+    for i in range(2, 5):
+        path = base_path / "assets" / f"asteroid_{i}.png"
+        ASTEROID_IMAGES.append(pygame.image.load(path).convert_alpha())
 
 class Asteroid(CircleShape):
     def __init__(self, x, y, radius, round_number=1):
