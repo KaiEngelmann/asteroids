@@ -72,7 +72,7 @@ def main():
 
     start_button = Button("Start Game", SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 - 25, 200, 50, font, start_game)
     restart_button = Button("Play Again", SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 50, 200, 50, font, start_game)
-
+    stars = generate_stars()
     # creates game loop
     while True:
         time_since_last_hit += dt
@@ -81,12 +81,7 @@ def main():
             if event.type == pygame.QUIT:
                 return
         screen.fill((0,0,0))
-        for star in stars:
-            star1, star2, base_brightness = star
-            flicker = random.randint(-30, 30)
-            brightness = max(150, min(255, base_brightness + flicker))
-            color = (brightness, brightness, brightness)
-            screen.set_at((star1, star2), color)
+        draw_stars(stars, screen)
 
         if game_state == START:
             start_button.handle_event(event)
