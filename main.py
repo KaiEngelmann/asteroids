@@ -7,10 +7,17 @@ from shot import Shot
 from buttons import Button
 import sys
 from stars import *
+import sounds
 
 def main():
     pygame.init()
     pygame.mixer.init()
+    sounds.load_sounds()
+    pygame.mixer.set_num_channels(16)
+
+    music_playing = False
+    opening_sound_played = False
+    game_over_sound_played = False
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     # creates object for FPS
@@ -20,7 +27,6 @@ def main():
     font = pygame.font.SysFont("Arial", 24)
 
     Player.load_spaceship()
-    Player.load_sounds()
 
     # create groups for game objects
     updatable = pygame.sprite.Group()
@@ -55,13 +61,18 @@ def main():
 
 
     def start_game():
-        nonlocal game_state, lives, score, player, asteroid_field, time_since_last_hit, round_number, score_for_next_round
+        nonlocal game_state, lives, score, player, asteroid_field, \
+        time_since_last_hit, round_number, score_for_next_round, \
+        opening_sound_played, game_over_sound_played
         game_state = PLAYING
         lives = 3
         score = 0
         time_since_last_hit = 999
         round_number = 1
         score_for_next_round = 30
+
+        opening_sound_played = False
+        game_over_sound_played = False
 
         # Reset game objects
         for sprite in updatable:
@@ -84,8 +95,15 @@ def main():
         draw_stars(stars, screen)
 
         if game_state == START:
+            if not opening_sound_played:
+                sounds.OPENING_SOUND.play()
+                opening_sound_played = True
+
             start_button.handle_event(event)
         elif game_state == GAME_OVER:
+            if not game_over_sound_played:
+                sounds.OPENING_SOUND.play()
+                game_over_sound_played = True
             restart_button.handle_event(event)
 
         if game_state == START:
@@ -101,6 +119,10 @@ def main():
             restart_button.draw(screen)
         elif game_state == PLAYING:
             player_hit = False
+            if not music_playing:
+                pygame.mixer.stop()
+                sounds.play_background_music()
+                music_playing = True
         
 
             updatable.update(dt)
@@ -112,12 +134,15 @@ def main():
             if player_hit:
                 lives -= 1
                 time_since_last_hit = 0
+                sounds.EXPLOSION_SOUND.play()
                 player.kill()
                 player = Player(x, y)
                 print(f"{lives} Lives Remaining")
 
             if lives <= 0:
                 print("Game Over!")
+                sounds.stop_music()
+                music_playing = False
                 game_state = GAME_OVER
             for asteroid in asteroid_group:
                 for shot in shot_group:
@@ -125,6 +150,7 @@ def main():
                         asteroid.split()
                         shot.kill()
                         score += 1
+                        sounds.EXPLOSION_SOUND.play()
             if score >= score_for_next_round:
                 round_number += 1
                 score_for_next_round += 30

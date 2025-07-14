@@ -4,19 +4,12 @@ from shot import *
 import os
 import pygame
 from pathlib import Path
+import sounds
 
 SPACESHIP_IMAGE = None
 
 
 class Player(CircleShape):
-
-    LASER_SOUND = None  # class variable
-
-    @classmethod
-    def load_sounds(cls):
-        base_path = Path(__file__).parent / "assets" / "sounds"
-        cls.LASER_SOUND = pygame.mixer.Sound(str(base_path / "laser.wav"))
-
 
     SPACESHIP_IMAGE = None
     
@@ -84,7 +77,8 @@ class Player(CircleShape):
             velocity = direction * PLAYER_SHOOT_SPEED
             shot = Shot(self.position.x, self.position.y, velocity)
             self.shot_timer = SHOT_CLOCK
-            if self.LASER_SOUND:
-                self.LASER_SOUND.play()
+            channel = pygame.mixer.find_channel()
+            if sounds.LASER_SOUND and channel:
+                channel.play(sounds.LASER_SOUND)
 
 
